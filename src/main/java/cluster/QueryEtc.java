@@ -29,8 +29,14 @@ public class QueryEtc {
     public static void main(String[] args) throws IOException {
         QueryEtc queryEtc = new QueryEtc();
         Table phoneEnrollInfoDemo = connection.getTable(TableName.valueOf("phoneEnrollInfoDemo"));
+        Table phoneEnrollInfo = connection.getTable(TableName.valueOf("phoneEnrollInfo"));
         Table test1 = connection.getTable(TableName.valueOf("test1"));
         Table DBD_ID = connection.getTable(TableName.valueOf("DBD_ID-TS"));
+
+        Date before = new Date();
+        queryEtc.singleValueFilter(phoneEnrollInfo, "15869956620");
+        Date after = new Date();
+        System.out.println((after.getTime()-before.getTime()));
 
         /* test query one in complete rowkey */
 //        Map<String,Map<String, Map<String,String>>> resultMap = queryEtc.queryInRowkey(test1,"row1");
@@ -94,7 +100,7 @@ public class QueryEtc {
      * Map to get several filters
      * @param keywords true means former ^; false means later $
      * @param mode true means MUST_PASS_ALL; false means MUST_PASS_ONE
-     * @throws IOException
+     * @throws IOException have no idea
      */
     public void regexFilter(Table table, Map<String, Boolean> keywords, boolean mode) throws IOException {
         Scan scan = new Scan();
@@ -141,6 +147,23 @@ public class QueryEtc {
     }
 
 
+    public void singleValueFilter(Table table, String keyword) throws IOException {
+        Scan scan = new Scan();
+        Filter filter = new SingleColumnValueFilter(Bytes.toBytes("Info"), Bytes.toBytes("phoneNum"),
+                CompareOperator.EQUAL, Bytes.toBytes(keyword) );
+        scan.setFilter(filter);
+        ResultScanner resultScanner = table.getScanner(scan);
+        Result result;
+        int i = 1;
+        while ((result=resultScanner.next()) != null) {
+            System.out.println("------- " + i++ + " --------");
+            /* to return a list */
+            //resultList.add(this.resultFormat(result));
+            /* to print result */
+            printResult(resultFormat(result));
+        }
+    }
+
 
     /**
      * should query in exact rowkey.
@@ -174,32 +197,18 @@ public class QueryEtc {
         scan.withStartRow(Bytes.toBytes(startRow), true);
         scan.withStopRow(Bytes.toBytes(endRow), true);
         ResultScanner resultScannerFilterList = table.getScanner(scan);
-//        Iterator<Result> results = resultScannerFilterList.iterator();
         List<Map<String,Map<String, Map<String,String>>>> resultList = new ArrayList<>();
         int i = 1;
-        if (resultScannerFilterList.next() == null){
-            System.out.println("queryInRowkeyRange: There is no row in this range! ");
-        }else {
-            for (Result result : resultScannerFilterList) {
-                System.out.println("------- " + i++ + " --------");
-                /* to return a list */
-                //resultList.add(this.resultFormat(result));
-                /* to print result */
-                this.printResult(this.resultFormat(result));
-            }
+        Result result;
+        while ((result = resultScannerFilterList.next()) != null){
+            System.out.println("------- " + i++ + " --------");
+            /* to return a list */
+            //resultList.add(this.resultFormat(result));
+            /* to print result */
+            printResult(resultFormat(result));
         }
+        System.out.println("queryInRowkeyRange: There is no row in this range! ");
         resultScannerFilterList.close();
-//        if (results.hasNext()){
-//            results.forEachRemaining(
-//                    /* @print */
-//                    System.out.println("------- "+ i++ + " --------");
-//            result -> this.printResult(this.resultFormat(result));
-//                    /* @return result:*/
-////                result -> resultList.add(resultFormat(result))
-//            );
-//        }else {
-//            System.out.println("queryInRowkeyRange: There is no row in this range! ");
-//        }
         return resultList;
     }
 
