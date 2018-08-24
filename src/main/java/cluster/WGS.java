@@ -25,7 +25,7 @@ public class WGS {
         phoneEnrollInfo = connection.getTable(TableName.valueOf("phoneEnrollInfo"));
         DBD_ID = connection.getTable(TableName.valueOf("DBD_ID-TS"));
         AssistTable = connection.getTable(TableName.valueOf("AssistTable"));
-        ID_Timestamp = connection.getTable(TableName.valueOf("ID_Timestamp"));
+        ID_Timestamp = connection.getTable(TableName.valueOf("ID-Timestamp"));
     }
 
 
@@ -73,8 +73,8 @@ public class WGS {
         List<Map<String,Map<String, Map<String,String>>>> resultList = new ArrayList<>();
         int i = 1;
         Scan scanID_TS = new Scan();
-        scanID_TS.withStartRow(Bytes.toBytes(ID+"_"), true);
-        scanID_TS.withStopRow(Bytes.toBytes(ID+"_9"), true);
+        scanID_TS.withStartRow(Bytes.toBytes(ID+"-"), true);
+        scanID_TS.withStopRow(Bytes.toBytes(ID+"-9"), true);
         ResultScanner resultScannerFilterList = ID_Timestamp.getScanner(scanID_TS);
 
         Get getAll = new Get(Bytes.toBytes(ID));
@@ -160,7 +160,12 @@ public class WGS {
 
     public static void main(String[] args) throws IOException {
         WGS wgs = new WGS();
-        wgs.phoneQuery("1476283305");
-        wgs.IDQuery("130223199410221179");
+        Date b = new Date();
+        wgs.phoneQuery("13923170385");
+        Date m = new Date();
+        System.out.println("---" + (m.getTime()-b.getTime()) + "ms ---\n");
+        wgs.IDQuery("340203197007246194");
+        Date a = new Date();
+        System.out.println("---" + (a.getTime()-m.getTime()) + "ms ---\n");
     }
 }
