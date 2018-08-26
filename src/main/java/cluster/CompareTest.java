@@ -258,7 +258,7 @@ public class CompareTest {
         System.out.println("sumPrefixID 内置函数-ID: " + sumPrefixID);
         System.out.println("sumRowRegexID 自己写的正则表达式-ID: " + sumRowRegexID);
         System.out.println("sumRowkeyRangePhone 使用RowkeyRange-Phone: " + sumRowkeyRangePhone);
-        System.out.println("sumPrefixPhone 内置函数-Phone: " + sumPrefixPhone);
+        System.out.println("sumPrefixPhone 内置函数-Phone: " + sumPrefixPhone );
 
 
         /* 对比使用  */
