@@ -118,7 +118,7 @@ public class CompareTest {
         int i = 1;
         while ((result = resultScanner.next()) != null){
             System.out.println("------- " + i++ + " --------");
-//            queryEtc.printResult(queryEtc.resultFormat(result));
+            queryEtc.printResult(queryEtc.resultFormat(result));
         }
         Date after = new Date();
         System.out.println("after: " + after.getTime());
@@ -233,12 +233,12 @@ public class CompareTest {
         /* 对比整个表数据量的大小对查询效率的影响，对比列族中列的大小对查询效率的影响。
          * 由于查询只涉及到具体的cell，因此，只需要用 SingleColumnValueFilterTest 函数即可 */
         System.out.println("对比整个表数据量的大小对查询效率的影响，对比列族中列的大小对查询效率的影响。");
-        outputStream.write(Bytes.toBytes("对比整个表数据量的大小对查询效率的影响，对比列族中列的大小对查询效率的影响。"));
+        outputStream.write(Bytes.toBytes("对比整个表数据量的大小对查询效率的影响，对比列族中列的大小对查询效率的影响。\n"));
         long sumSingleValueInfo6 = 0L; //在phoneInfo表中查询，T6只有10列，查询姓名， family->"info", qualifier->"name"
         long sumSingleValueID_TS10 = 0L; //在大表中查询（8亿）T10只有10列, 查询email， family->"T10", qualifier->"f9"或"f10"
         long sumSingleValueID_TS5 = 0L; //在大表中查询（8亿）T5共有55列，查询地级市，family->"T5", qualifier->"f35"
         for (String name:nameList){
-            List<Long> list = compareTest.SingleColumnValueFilterTest(compareTest.phoneEnrollInfo, "info", "name", name);
+            List<Long> list = compareTest.SingleColumnValueFilterTest(compareTest.phoneEnrollInfo, "Info", "name", name);
             sumSingleValueInfo6 += list.get(1);
             outputStream.write(Bytes.toBytes("there are " + list.get(0) + " items about " + name + ", took " + list.get(1) + "ms.\n"));
         }System.out.println("name complete.");
@@ -261,7 +261,7 @@ public class CompareTest {
          * 还有用ID-Timestamp 和 DBD_ID 来测试不同长度的查询条件对同一个查询的影响
          * 都是使用rowkey作为查询条件（的一部分） */
         System.out.println("测试 rowkeyRange、hbase内置API PrefixFilter 和 使用自定义正则表达式的查询效率");
-        outputStream.write(Bytes.toBytes("测试 rowkeyRange、hbase内置API PrefixFilter 和 使用自定义正则表达式的查询效率"));
+        outputStream.write(Bytes.toBytes("测试 rowkeyRange、hbase内置API PrefixFilter 和 使用自定义正则表达式的查询效率.\n"));
         long a, sumRowkeyRangeID = 0L; //在大表中查询，只需要表名和ID参数 ID为rowkey
         long b, sumPrefixID = 0L; //同上
         long c, sumRowRegexID = 0L; //同上
