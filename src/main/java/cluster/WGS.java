@@ -1,8 +1,9 @@
-package cluster;
+//package cluster;
 //
 //import org.apache.hadoop.conf.Configuration;
 //import org.apache.hadoop.hbase.*;
 //import org.apache.hadoop.hbase.client.*;
+//import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 //import org.apache.hadoop.hbase.util.Bytes;
 //
 //import java.io.IOException;
@@ -71,11 +72,12 @@ package cluster;
 //
 //    List<Map<String,Map<String, Map<String,String>>>> IDQuery(String ID)throws IOException {
 //        List<Map<String,Map<String, Map<String,String>>>> resultList = new ArrayList<>();
+//
 //        int i = 1;
-//        Scan scanID_TS = new Scan();
-//        scanID_TS.withStartRow(Bytes.toBytes(ID+"-"), true);
-//        scanID_TS.withStopRow(Bytes.toBytes(ID+"-9"), true);
-//        ResultScanner resultScannerFilterList = ID_Timestamp.getScanner(scanID_TS);
+////        Scan scanID_TS = new Scan();
+////        scanID_TS.withStartRow(Bytes.toBytes(ID+"-"), true);
+////        scanID_TS.withStopRow(Bytes.toBytes(ID+"-9"), true);
+////        ResultScanner resultScannerFilterList = ID_Timestamp.getScanner(scanID_TS);
 //
 //        Get getAll = new Get(Bytes.toBytes(ID));
 //        Result resultAll = phoneEnrollInfo.get(getAll);
@@ -84,8 +86,19 @@ package cluster;
 //            /* to return a list */
 //            //resultList.add(this.resultFormat(resultAll));
 //            /* to print result */
-////            this.printResult(this.resultFormat(resultAll));
+//            this.printResult(this.resultFormat(resultAll));
 //        }else System.out.println("No ID matches the ID " + ID);
+//
+//        //some changes
+//        List<Cell> CellList = resultAll.getColumnCells(Bytes.toBytes("Info"), Bytes.toBytes("phoneNum"));
+//        String phone = Bytes.toString(CellUtil.cloneValue(CellList.get(0)));
+//        System.out.println(phone);
+//
+//        Scan scanDBD_ID = new Scan();
+//        scanDBD_ID.withStartRow(Bytes.toBytes(phone+"_t"), true);
+//        scanDBD_ID.withStopRow(Bytes.toBytes(phone+"_t9"), true);
+//        ResultScanner resultScannerFilterList = DBD_ID.getScanner(scanDBD_ID);
+//
 //
 //        Result result;
 //        while ((result = resultScannerFilterList.next()) != null){
@@ -93,7 +106,7 @@ package cluster;
 //            /* to return a list */
 //            //resultList.add(this.resultFormat(result));
 //            /* to print result */
-////            this.printResult(this.resultFormat(result));
+//            this.printResult(this.resultFormat(result));
 //        }
 //        System.out.println("queryInRowkeyRange: There is no more row in this range! ");
 //        resultScannerFilterList.close();
@@ -169,7 +182,7 @@ package cluster;
 //        System.out.println("---" + (a.getTime()-m.getTime()) + "ms ---\n");
 //    }
 //}
-
+//
 //import java.util.ArrayList;
 //import java.util.List;
 //

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="libhbase">
+    <CLASSES>
+      <root url="file://$USER_HOME$/libhbase" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$USER_HOME$/libhbase" recursive="false" />
+  </library>
+</component>
