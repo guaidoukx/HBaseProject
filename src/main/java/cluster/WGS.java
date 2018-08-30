@@ -3,7 +3,6 @@ package cluster;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
@@ -70,7 +69,7 @@ public class WGS {
 
 
 
-    List<Map<String,Map<String, Map<String,String>>>> IDQuery(String ID)throws IOException {
+    List<Map<String,Map<String, Map<String,String>>>> IDQueryToPhone(String ID)throws IOException {
         List<Map<String,Map<String, Map<String,String>>>> resultList = new ArrayList<>();
 
         int i = 1;
@@ -115,6 +114,39 @@ public class WGS {
     }
 
 
+    List<Map<String,Map<String, Map<String,String>>>> IDQuery(String ID)throws IOException {
+        List<Map<String,Map<String, Map<String,String>>>> resultList = new ArrayList<>();
+
+        int i = 1;
+        Scan scanID_TS = new Scan();
+        scanID_TS.withStartRow(Bytes.toBytes(ID+"-"), true);
+        scanID_TS.withStopRow(Bytes.toBytes(ID+"-9"), true);
+        ResultScanner resultScannerFilterList = ID_Timestamp.getScanner(scanID_TS);
+
+        Get getAll = new Get(Bytes.toBytes(ID));
+        Result resultAll = phoneEnrollInfo.get(getAll);
+        if (resultAll.size() != 0) {
+            System.out.println("------- " + i++ + " --------");
+            /* to return a list */
+            //resultList.add(this.resultFormat(resultAll));
+            /* to print result */
+            this.printResult(this.resultFormat(resultAll));
+        }else System.out.println("No items matches the ID " + ID);
+
+        Result result;
+        while ((result = resultScannerFilterList.next()) != null){
+            System.out.println("------- " + i++ + " --------");
+            /* to return a list */
+            //resultList.add(this.resultFormat(result));
+            /* to print result */
+            this.printResult(this.resultFormat(result));
+        }
+        System.out.println("queryInRowkeyRange: There is no more row in this range! ");
+        resultScannerFilterList.close();
+
+        return resultList;
+    }
+
     /**
      * always used in a query method to get a format result.
      * @param result, No need to check if it is empty or not. This step should be in query method.
@@ -123,7 +155,6 @@ public class WGS {
      *       2. otherwise, query method return @null.
      */
     public Map<String,Map<String, Map<String,String>>> resultFormat(Result result){
-        //
         List<Cell> cells = result.listCells();
         Map<String, Map<String, Map<String, String>>> resultMap = new HashMap<>();
         cells.forEach(
@@ -177,7 +208,7 @@ public class WGS {
 //        wgs.phoneQuery("13923170385");
         Date m = new Date();
 //        System.out.println("---" + (m.getTime()-b.getTime()) + "ms ---\n");
-        wgs.IDQuery("522633199410167757");
+        wgs.IDQuery("340203197007246194");
         Date a = new Date();
         System.out.println("---" + (a.getTime()-m.getTime()) + "ms ---\n");
     }

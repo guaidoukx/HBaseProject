@@ -298,28 +298,6 @@ public class CompareTest {
         outputStream.close();
         compareTest.fs.close();
 
-
-        /* 对比使用  */
-
-//        long sumPrefixFilter = 0L;
-//        long sumRowkeyRange = 0L;
-//        long sumRowFilter = 0L;
-//        for (String query:phoneList){
-//            sumRowkeyRange += compareTest.RowkeyRangeOneItem(compareTest.DBD_ID, query+"_t", query+"_t9");
-//            sumPrefixFilter += compareTest.PrefixFilterTest(compareTest.DBD_ID,query+"_t");
-//            sumRowFilter += compareTest.RowFilterTest(compareTest.DBD_ID, query);
-//        }
-//        System.out.println("sumPrefixFilter " + sumPrefixFilter);
-//        System.out.println("sumRowkeyRange " + sumRowkeyRange);
-//        System.out.println("sumRowFilter " + sumRowFilter);
-
-
-
-//        compareTest.RowFilterTest(compareTest.DBD_ID,"13000002944_t");
-//        compareTest.SingleColumnValueFilterTest(compareTest.phoneEnrollInfo,"Info", "name", "米鲁");
-
-
-
     }
 
 
