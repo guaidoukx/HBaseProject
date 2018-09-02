@@ -228,7 +228,8 @@ public class CompareTest {
         List<String> addressList = new ArrayList<>(Arrays.asList( //
                 "融安县", "花都区", "平坝县", "尼木县", "西乡塘区",
                 "城厢区", "娄星区", "三水区", "东乌珠穆沁旗", "瑞昌市"));
-
+        List<String> tsList = new ArrayList<>(Arrays.asList( //
+                "1476398395", "1488979620", "1498035335", "1453803236", "1513958225"));
 
         /* 对比整个表数据量的大小对查询效率的影响，对比列族中列的大小对查询效率的影响。
          * 由于查询只涉及到具体的cell，因此，只需要用 SingleColumnValueFilterTest 函数即可 */
@@ -237,6 +238,8 @@ public class CompareTest {
         long sumSingleValueInfo6 = 0L; //在phoneInfo表中查询，T6只有10列，查询姓名， family->"info", qualifier->"name"
         long sumSingleValueID_TS10 = 0L; //在大表中查询（8亿）T10只有10列, 查询email， family->"T10", qualifier->"f9"或"f10"
         long sumSingleValueID_TS5 = 0L; //在大表中查询（8亿）T5共有55列，查询地级市，family->"T5", qualifier->"f35"
+        long sumSingleValueInfots6 = 0L; //?phoneInfo?????T6??10????ts? family->"Info", qualifier->"ts6"
+
         for (String name:nameList){
             List<Long> list = compareTest.SingleColumnValueFilterTest(compareTest.phoneEnrollInfo, "Info", "name", name);
             sumSingleValueInfo6 += list.get(1);
@@ -252,6 +255,12 @@ public class CompareTest {
             sumSingleValueID_TS5 += list.get(1);
             outputStream.write(Bytes.toBytes("there are " + list.get(0) + " items about " + address + ", took " + list.get(1) + "ms.\n"));
         }System.out.println("address complete.");
+        for (String ts:tsList){
+            List<Long> list = compareTest.SingleColumnValueFilterTest(compareTest.phoneEnrollInfo, "Info", "ts2", ts);
+            sumSingleValueInfots6 += list.get(1);
+            outputStream.write(Bytes.toBytes("there are " + list.get(0) + " items about " + ts + ", took " + list.get(1) + "ms.\n"));
+        }System.out.println("name complete.");
+        outputStream.write(Bytes.toBytes("--sumSingleValue Info T6 for name: " + sumSingleValueInfots6 + "ms.\n"));
         outputStream.write(Bytes.toBytes("--sumSingleValue Info T6 for name: " + sumSingleValueInfo6 + "ms.\n"));
         outputStream.write(Bytes.toBytes("--sumSingleValue ID_TS T10 for email: " + sumSingleValueID_TS10 + "ms.\n"));
         outputStream.write(Bytes.toBytes("--sumSingleValue ID_TS T5 for address: " + sumSingleValueID_TS5 + "ms.\n\n"));
@@ -295,10 +304,8 @@ public class CompareTest {
         outputStream.write(Bytes.toBytes("--sumRowRegexID 自己写的正则表达式-ID: " + sumRowRegexID + "ms.\n"));
         outputStream.write(Bytes.toBytes("--sumRowkeyRangePhone 使用RowkeyRange-Phone: " + sumRowkeyRangePhone + "ms" + ".\n"));
         outputStream.write(Bytes.toBytes("--sumPrefixPhone 内置函数-Phone: " + sumPrefixPhone + "ms.\n"));
+
         outputStream.close();
         compareTest.fs.close();
-
     }
-
-
 }
