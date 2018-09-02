@@ -13,8 +13,6 @@ public class AttachHDFS {
 
     public AttachHDFS() throws URISyntaxException, IOException, InterruptedException {
         Configuration conf = new Configuration();
-//        conf.set("dfs.replication", "2");
-//        conf.set("dfs.blocksize","64m");
         conf.set("fs.defaultFS","hdfs://10.141.209.224:9000");
         fs = FileSystem.newInstance(conf);
 //        fs= FileSystem.get(new URI("hdfs://10.141.209.224:9000"),conf,"root");
