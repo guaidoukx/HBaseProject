@@ -15,7 +15,7 @@ public class AttachHDFS {
     FileSystem fs;
     String rootPath;
 
-    public AttachHDFS(String rootPath) throws URISyntaxException, IOException, InterruptedException {
+    public AttachHDFS(String rootPath) throws  IOException {
         Configuration conf = new Configuration();
         conf.set("fs.defaultFS", rootPath);
         fs = FileSystem.newInstance(conf);
