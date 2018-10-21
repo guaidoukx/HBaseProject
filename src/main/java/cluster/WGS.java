@@ -17,10 +17,10 @@ public class WGS {
 
     public WGS() throws IOException {
         Configuration conf = HBaseConfiguration.create();
-        conf.set("hbase.zookeeper.quorum", "10.141.209.224");
+        conf.set("hbase.zookeeper.quorum", "cloud024");
         conf.set("hbase.zookeeper.property.clientPort", "2181");
-        conf.set("hbase.master", "10.141.209.224:60000");
-        conf.set("fs.defaultFS", "hdfs://10.141.209.224:9000");
+        conf.set("hbase.master", "cloud024:60000");
+        conf.set("fs.defaultFS", "hdfs://cloud024:9000");
         connection = ConnectionFactory.createConnection(conf);
         phoneEnrollInfo = connection.getTable(TableName.valueOf("phoneEnrollInfo"));
         DBD_ID = connection.getTable(TableName.valueOf("DBD_ID-TS"));
@@ -49,7 +49,7 @@ public class WGS {
                 /* to return a list */
                 //resultList.add(this.resultFormat(resultAll));
                 /* to print result */
-//                this.printResult(this.resultFormat(resultAll));
+                this.printResult(this.resultFormat(resultAll));
             }else System.out.println("No ID matches the phone number " + phone);
         }else System.out.println("There are no records about the phone number "+phone);
 
@@ -59,7 +59,7 @@ public class WGS {
             /* to return a list */
             //resultList.add(this.resultFormat(result));
             /* to print result */
-//            this.printResult(this.resultFormat(result));
+            this.printResult(this.resultFormat(result));
         }
         System.out.println("queryInRowkeyRange: There is no more row in this range! ");
         resultScannerFilterList.close();
@@ -205,7 +205,7 @@ public class WGS {
     public static void main(String[] args) throws IOException {
         WGS wgs = new WGS();
 //        Date b = new Date();
-//        wgs.phoneQuery("13923170385");
+        wgs.phoneQuery("13923170385");
         Date m = new Date();
 //        System.out.println("---" + (m.getTime()-b.getTime()) + "ms ---\n");
         wgs.IDQuery("340203197007246194");
@@ -214,23 +214,3 @@ public class WGS {
     }
 }
 
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class WGS{
-//    int enen(int i){
-//        return i++;
-//    }
-//    public static void main(String[] args){
-//        WGS wgs = new WGS();
-//        List<Integer> list = new ArrayList<>();
-//        int i = 0;
-//        for (int x=0;x<5;x++){
-//            i = wgs.enen(x);
-//            list.add(i);
-//        }
-//        for (int m:list){
-//            System.out.println(m);
-//        }
-//    }
-//        }

@@ -18,8 +18,8 @@ public class QueryEtc {
         Configuration conf = HBaseConfiguration.create();
         conf.set("hbase.zookeeper.quorum", "10.141.209.224");
         conf.set("hbase.zookeeper.property.clientPort", "2181");
-        conf.set("hbase.master", "10.141.209.224:60000");
-        conf.set("fs.defaultFS", "hdfs://10.141.209.224:9000");
+        conf.set("hbase.master", "cloud024:60000");
+        conf.set("fs.defaultFS", "hdfs://cloud024:9000");
         fileSystem = FileSystem.newInstance(conf);
         connection = ConnectionFactory.createConnection(conf);
         Admin admin = connection.getAdmin();
@@ -32,9 +32,10 @@ public class QueryEtc {
         Table phoneEnrollInfo = connection.getTable(TableName.valueOf("phoneEnrollInfo"));
         Table test1 = connection.getTable(TableName.valueOf("test1"));
         Table DBD_ID = connection.getTable(TableName.valueOf("DBD_ID-TS"));
+        Table Addr_TS_ID = connection.getTable(TableName.valueOf("Addr_TS_ID"));
 
         Date before = new Date();
-        queryEtc.singleValueFilter(phoneEnrollInfo, "15869956620");
+        queryEtc.queryInRowkeyRange(Addr_TS_ID, "上海市上海市其他_0", "上海市上海市其他_z");
         Date after = new Date();
         System.out.println((after.getTime()-before.getTime()));
 
@@ -147,9 +148,9 @@ public class QueryEtc {
     }
 
 
-    public void singleValueFilter(Table table, String keyword) throws IOException {
+    public void singleValueFilter(Table table, String cf, String qualifier, String keyword) throws IOException {
         Scan scan = new Scan();
-        Filter filter = new SingleColumnValueFilter(Bytes.toBytes("Info"), Bytes.toBytes("phoneNum"),
+        Filter filter = new SingleColumnValueFilter(Bytes.toBytes(cf), Bytes.toBytes(qualifier),
                 CompareOperator.EQUAL, Bytes.toBytes(keyword) );
         scan.setFilter(filter);
         ResultScanner resultScanner = table.getScanner(scan);

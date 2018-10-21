@@ -7,7 +7,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,10 +18,8 @@ public class AttachHDFS {
         Configuration conf = new Configuration();
         conf.set("fs.defaultFS", rootPath);
         fs = FileSystem.newInstance(conf);
-//        fs= FileSystem.get(new URI("hdfs://10.141.209.224:9000"),conf,"root");
         System.out.println("HDFS has been attached !");
         this.rootPath = rootPath;
-
     }
 
 
@@ -42,10 +39,13 @@ public class AttachHDFS {
      * @param dstString HDFS目标路径地址
      * @throws IOException 一直不清楚
      */
-    public void put(String srcString, String dstString) throws IOException {//覆盖上传
+    public boolean put(String srcString, String dstString) throws IOException {//覆盖上传
         Path src = new Path(srcString);
-        Path dst = new Path(dstString);
-        fs.copyFromLocalFile(src, dst);
+        if (!fs.exists(src)){
+            Path dst = new Path(dstString);
+            fs.copyFromLocalFile(src, dst);
+            return true;
+        }else return false;
     }
 
     public void listPath(String path){
@@ -55,6 +55,7 @@ public class AttachHDFS {
                     FileStatus[] fileStatus = fs.listStatus(new Path(path));
                     if (fileStatus.length != 0) {
                         for (FileStatus fileStatus1 : fileStatus) {
+                            System.out.println(fileStatus1);
                             String pathResult = fileStatus1.getPath().toString();
                             String pattern = "^" + rootPath + "\\/(.*)";
                             Pattern filesAndPaths = Pattern.compile(pattern);
@@ -76,27 +77,60 @@ public class AttachHDFS {
 
     //下载
     public void load() throws IOException {//覆盖下载
-        Path src = new Path("G:/result2.txt");
-        Path dst = new Path("/test/result.txt");
+        Path src = new Path("/Users/xiangyali/Desktop/Kmeans.ja");
+        Path dst = new Path("/xyl/Kmeans.jar");
         fs.copyToLocalFile(dst, src);
     }
 
+
     //新建文件夹
-    public void add() throws Exception {
-        fs.mkdirs(new Path("/path"));
+    public boolean makeDirectory(String directoryName) throws Exception {
+        Path directoryPath = new Path( directoryName);
+        if (fs.exists(directoryPath)) {
+            System.out.println("The directory is exist.");
+            return false;
+        }else {
+            System.out.println(directoryName + "created successfully!");
+            return fs.mkdirs(directoryPath);
+        }
+    }
+
+
+    public boolean createFile(String fileName) throws IOException {
+        Path filePath = new Path(fileName);
+        fs.create(filePath);
+        if (fs.exists(filePath)){
+            System.out.println(fileName + " has been created successfully!" );
+            return true;
+        }
+        else {
+            System.out.println(fileName + " can't be created!" );
+            return false;
+        }
     }
 
 
     //删除文件或文件夹，bollean代表是否递归删除
-    public void delete() throws IOException {
-        fs.delete(new Path("/result.txt"),true);
-
+    public boolean delete(String fileName) throws IOException {
+        Path filePath = new Path(rootPath + fileName);
+        if (fs.exists(filePath)){
+            return fs.delete(filePath, true);
+        }else {
+            System.out.println("No such a file or directory.");
+            return false;
+        }
     }
 
 
-    public static void main(String args[]) throws InterruptedException, IOException, URISyntaxException {
-        AttachHDFS attachHDFS = new AttachHDFS("hdfs://10.141.209.224:9000");
-        attachHDFS.listPath("/");
+    public static void main(String args[]) throws Exception {
+        AttachHDFS attachHDFS = new AttachHDFS("hdfs://cloud024:9000");
+//        attachHDFS.listPath("/xyl");
+//        attachHDFS.makeDirectory("/xyl/abc");
+//        attachHDFS.put("/Users/xiangyali/Desktop/Hadoop.ppt","/xyl/abc" );
+//        attachHDFS.createFile("/xyl/aaa/xyl1.txt");
+//        attachHDFS.createFile("/xyl/aaa/xyl2.txt");
+//        attachHDFS.delete("/xyl/aaa");
+        attachHDFS.load();
     }
 
 
