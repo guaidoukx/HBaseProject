@@ -31,7 +31,7 @@ public class TableEtc {
     public static void main(String[] args) throws IOException {
         TableEtc tableEtc = new TableEtc();
 //        tableEtc.tableCreate("txyl", new String[]{"xingming", "nianling"});
-        tableEtc.tableScan("Addr_TS_ID");
+        tableEtc.tableScan("DBD_ID-TS");
     }
 
     public List<String> list() throws IOException {

@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="libhbase">
     <CLASSES>
-      <root url="file://$USER_HOME$/JARS/libhbase" />
+      <root url="file://$USER_HOME$/Jars/libhbase" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.ideaLibSources/hbase-client-2.0.0-sources.jar!/" />
     </SOURCES>
-    <jarDirectory url="file://$USER_HOME$/JARS/libhbase" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Jars/libhbase" recursive="false" />
   </library>
 </component>
