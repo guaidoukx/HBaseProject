@@ -130,7 +130,7 @@ public class AttachHDFS {
 //        attachHDFS.createFile("/xyl/aaa/xyl1.txt");
 //        attachHDFS.createFile("/xyl/aaa/xyl2.txt");
 //        attachHDFS.delete("/xyl/aaa");
-        attachHDFS.load();
+        attachHDFS.put("/Users/xiangyali/Desktop/心河数据集/数据集不分开/KMEANS.jar", "/xyl/validate");
     }
 
 

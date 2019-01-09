@@ -11,6 +11,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,13 +42,14 @@ public class PhoneAdrrPhone {
     //1506627160 13000015154_t5_1506627160 cl21 -> 山东省临沂市沂水县 cl39 -> 台湾省桃园市其他
     public static void main(String[] args) throws IOException {
         PhoneAdrrPhone phoneAdrrPhone = new PhoneAdrrPhone();
-        phoneAdrrPhone.QueryDBDPhone_T_TS("13000015154", "1442339515", "1506627160");
+        List<Map> a = phoneAdrrPhone.QueryDBDPhone_T_TS("13000015154", "1442339515", "1506627160");
+        System.out.println(a);
 //        phoneAdrrPhone.QueryAddr_TS_ID("上海市上海市其他", "1420725593", "1420725594");
     }
 
 
 
-    void QueryDBDPhone_T_TS(String phone, String startTime, String stopTime) throws IOException {
+    List<Map> QueryDBDPhone_T_TS(String phone, String startTime, String stopTime) throws IOException {
         System.out.println();
         System.out.println("Phone: " + phone);
         System.out.println("Start Time: " + startTime);
@@ -69,6 +71,7 @@ public class PhoneAdrrPhone {
         ResultScanner resultScannerPhone = DBDPhone_T_TS.getScanner(DBDPhone_T_TSScan);
 
         Result result;
+        List<Map> finalReault = new ArrayList<>();
         while ((result = resultScannerPhone.next()) != null){
             /* 1. to return a list */
             //resultList.add(this.resultFormat(result));
@@ -77,6 +80,8 @@ public class PhoneAdrrPhone {
 //            System.out.println("------- " + i++ + " --------");
 //            queryEtc.printResult(queryEtc.resultFormat(result));
             /* 3. to print address result */
+            if (i>3) break;
+            Map mapResult = new HashMap();
             System.out.print("Address *** " + i++ +": " );
 
             List<Cell> cells = result.listCells();
@@ -92,7 +97,10 @@ public class PhoneAdrrPhone {
                                     /* 1. when return a list */
                                     //List<String> IDs = QueryAddr_TS_ID(valueString, startTime,stopTime);
                                     /* 2. when print result */
-                                    QueryAddr_TS_ID(valueString, startTime, stopTime);
+//                                    QueryAddr_TS_ID(valueString, startTime, stopTime);
+                                    /* 3. to return a map*/
+                                    mapResult.put("address", valueString);
+                                    mapResult.put("phone", QueryAddr_TS_ID(valueString, startTime, stopTime));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -100,11 +108,13 @@ public class PhoneAdrrPhone {
                         }
                     }
             );
+            finalReault.add(mapResult);
         }
+        return finalReault;
     }
 
 
-    void QueryAddr_TS_ID(String addr, String startTime, String stopTime) throws IOException {
+    List<String> QueryAddr_TS_ID(String addr, String startTime, String stopTime) throws IOException {
         int i = 1;
         String startQuery = addr + "_" + startTime + "_/";
         String stopQuery = addr + "_" + stopTime + "_`";
@@ -121,17 +131,18 @@ public class PhoneAdrrPhone {
         while ((result = resultScannerAddr.next()) != null){
             String rowkey = Bytes.toString(result.getRow());
             String id = rowkey.split("_")[2];
+            if (i++>10) break;
 
             /*  1. to return a list */
-            //IDs.add(id);
+            IDs.add(id);
             /*  2. to print all result */
-            //System.out.println("\t  | " + i++ + " |");
+            //System.out.println("\t  | " + i + " |");
             //queryEtc.printResult(queryEtc.resultFormat(result));
             /*  3. to print id result */
-            System.out.println("\tPhone # " + i++ + ": " + id);
+//            System.out.println("\tPhone # " + i + ": " + id);
         }
         /* 1. to return a list */
-        // return IDs;
+         return IDs;
     }
 
 
